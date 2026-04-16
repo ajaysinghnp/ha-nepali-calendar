@@ -1,0 +1,6 @@
+# Default Location of configuration.yaml in devcontainer environment:
+#  /home/vscode/.homeassistant/configuration.yaml
+
+# Disable go2rtc for the development environment
+go2rtc:
+  url: http://dummy-instance:1984

@@ -1,0 +1,59 @@
+{
+  "name": "Nepali Calendar Integration Development",
+  "image": "mcr.microsoft.com/devcontainers/python:3.13",
+  "postCreateCommand": "/bin/bash .devcontainer/post-create-commands.sh",
+  "containerEnv": {
+    "DEVCONTAINER": "1",
+    "HOMEASSISTANT_CONFIG": "/config"
+  },
+  "mounts": [
+    "source=${localWorkspaceFolder}/config,target=/config,type=bind"
+  ],
+  "appPort": ["8123:8123"],
+  "forwardPorts": [8123],
+  "portsAttributes": {
+    "8123": {
+      "label": "Home Assistant",
+      "onAutoForward": "notify"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "charliermarsh.ruff",
+        "github.vscode-pull-request-github",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ryanluker.vscode-coverage-gutters"
+      ],
+      "settings": {
+        "files.eol": "\n",
+        "editor.tabSize": 4,
+        "editor.formatOnPaste": true,
+        "editor.formatOnSave": true,
+        "editor.formatOnType": false,
+        "files.trimTrailingWhitespace": true,
+        "python.analysis.typeCheckingMode": "basic",
+        "python.analysis.autoImportCompletions": true,
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "[python]": {
+          "editor.defaultFormatter": "charliermarsh.ruff"
+        }
+      }
+    }
+  },
+  "remoteUser": "vscode",
+  "features": {
+    "ghcr.io/devcontainers-extra/features/apt-packages:1": {
+      "packages": [
+        "ffmpeg",
+        "libpcap-dev",
+        "bluez",
+        "dbus",
+        "libturbojpeg0-dev",
+        "libglib2.0-dev",
+        "libdbus-1-dev"
+      ]
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "Nepali Calendar",
+  "domains": ["sensor", "calendar"],
+  "country": ["NP"],
+  "documentation": "https://github.com/ajaysinghnp/ha-nepali-calendar/blob/main/README.md",
+  "filename": "nepali-calendar-card.js",
+  "homeassistant": "2024.1.0",
+  "render_readme": true
+}

@@ -1,0 +1,15 @@
+{
+  "domain": "nepali_calendar",
+  "name": "Nepali Calendar",
+  "version": "0.1.0",
+  "documentation": "https://github.com/ajaysinghnp/ha-nepali-calendar",
+  "issue_tracker": "https://github.com/ajaysinghnp/ha-nepali-calendar/issues",
+  "dependencies": [],
+  "codeowners": [
+    "@ajaysinghnp"
+  ],
+  "requirements": [],
+  "iot_class": "local_push",
+  "homeassistant": "2024.1.0",
+  "config_flow": true
+}

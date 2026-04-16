@@ -1,0 +1,15 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Nepali Calendar",
+        "description": "Add the Nepali (Bikram Sambat) calendar to Home Assistant. This creates a date sensor, a calendar entity for events, and date-conversion services.",
+        "data": {}
+      }
+    },
+    "abort": {
+      "already_configured": "Nepali Calendar is already configured."
+    },
+    "error": {}
+  }
+}

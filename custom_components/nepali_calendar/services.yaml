@@ -1,0 +1,176 @@
+gregorian_to_nepali:
+  name: Gregorian to Nepali
+  description: >
+    Convert a Gregorian (AD) date to its Bikram Sambat (BS) equivalent.
+    The result is fired as a  nepali_calendar_conversion_result  event on the event bus.
+  fields:
+    year:
+      name: Year
+      description: Gregorian year (e.g. 2025)
+      required: true
+      example: 2025
+      selector:
+        number:
+          min: 1900
+          max: 2200
+          mode: box
+    month:
+      name: Month
+      description: Gregorian month (1–12)
+      required: true
+      example: 4
+      selector:
+        number:
+          min: 1
+          max: 12
+          mode: box
+    day:
+      name: Day
+      description: Gregorian day (1–31)
+      required: true
+      example: 14
+      selector:
+        number:
+          min: 1
+          max: 31
+          mode: box
+
+nepali_to_gregorian:
+  name: Nepali to Gregorian
+  description: >
+    Convert a Bikram Sambat (BS) date to its Gregorian (AD) equivalent.
+    The result is fired as a  nepali_calendar_conversion_result  event.
+  fields:
+    bs_year:
+      name: BS Year
+      description: Bikram Sambat year (e.g. 2081)
+      required: true
+      example: 2081
+      selector:
+        number:
+          min: 2000
+          max: 2100
+          mode: box
+    bs_month:
+      name: BS Month
+      description: BS month number (1=Baisakh … 12=Chaitra)
+      required: true
+      example: 1
+      selector:
+        number:
+          min: 1
+          max: 12
+          mode: box
+    bs_day:
+      name: BS Day
+      description: BS day (1–32)
+      required: true
+      example: 1
+      selector:
+        number:
+          min: 1
+          max: 32
+          mode: box
+
+add_event:
+  name: Add Nepali Event
+  description: Add an event (birthday, anniversary, etc.) to the Nepali calendar.
+  fields:
+    title:
+      name: Title
+      description: Event title
+      required: true
+      example: "Ram's Birthday"
+      selector:
+        text:
+    bs_year:
+      name: BS Year
+      description: Bikram Sambat year
+      required: true
+      example: 2081
+      selector:
+        number:
+          min: 2000
+          max: 2100
+          mode: box
+    bs_month:
+      name: BS Month
+      description: BS month (1–12)
+      required: true
+      example: 1
+      selector:
+        number:
+          min: 1
+          max: 12
+          mode: box
+    bs_day:
+      name: BS Day
+      description: BS day
+      required: true
+      example: 10
+      selector:
+        number:
+          min: 1
+          max: 32
+          mode: box
+    description:
+      name: Description
+      description: Optional description or notes
+      required: false
+      example: "Family gathering at home"
+      selector:
+        text:
+          multiline: true
+    annual:
+      name: Annual
+      description: Repeat this event every year on the same BS month and day
+      required: false
+      default: false
+      selector:
+        boolean:
+    color:
+      name: Color
+      description: Optional hex colour for the event marker (e.g. "#e74c3c")
+      required: false
+      example: "#3498db"
+      selector:
+        text:
+
+delete_event:
+  name: Delete Nepali Event
+  description: Delete an event by its ID (found in the nepali_calendar_events_list event).
+  fields:
+    event_id:
+      name: Event ID
+      description: UUID of the event to delete
+      required: true
+      example: "550e8400-e29b-41d4-a716-446655440000"
+      selector:
+        text:
+
+list_events:
+  name: List Nepali Events
+  description: >
+    Fire a  nepali_calendar_events_list  event containing all stored events.
+    Optionally filter by BS year and/or month.
+  fields:
+    bs_year:
+      name: BS Year (filter)
+      description: Filter by BS year (optional)
+      required: false
+      example: 2081
+      selector:
+        number:
+          min: 2000
+          max: 2100
+          mode: box
+    bs_month:
+      name: BS Month (filter)
+      description: Filter by BS month (optional, requires bs_year)
+      required: false
+      example: 1
+      selector:
+        number:
+          min: 1
+          max: 12
+          mode: box

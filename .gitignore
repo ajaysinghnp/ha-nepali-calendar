@@ -1,0 +1,33 @@
+# artifacts
+__pycache__
+.pytest*
+*.egg-info
+*/build/*
+*/dist/*
+
+# Home Assistant configuration
+config/*
+!config/configuration.yaml
+
+# misc
+.coverage
+.vscode
+coverage.xml
+.ruff_cache
+/.idea/
+/.env/
+*~
+\#*\#
+.\#*
+*.orig
+*.rej
+.history
+.DS_Store
+Thumbs.db
+go2rtc_linux_amd64
+test-results.xml
+play.sh
+
+
+device-address.txt
+config/
