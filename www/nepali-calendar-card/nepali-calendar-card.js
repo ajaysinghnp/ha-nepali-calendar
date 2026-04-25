@@ -73,6 +73,9 @@ const BS_YEAR_DATA = {
 
 const NEPALI_MONTHS = ["Baisakh", "Jestha", "Ashadh", "Shrawan", "Bhadra", "Ashwin", "Kartik", "Mangsir", "Poush", "Magh", "Falgun", "Chaitra"];
 const NEPALI_MONTHS_NP = ["बैशाख", "जेठ", "असार", "साउन", "भदौ", "आश्विन", "कार्तिक", "मंसिर", "पौष", "माघ", "फाल्गुन", "चैत"];
+const ENGLISH_MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const ENGLISH_MONTHS_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const ENGLISH_MONTHS_NP = ["जनवरी", "फरवरी", "मार्च", "अप्रिल", "मई", "जून", "जुलाई", "अगस्त", "सितम्बर", "अक्टूबर", "नवम्बर", "दिसम्बर"];
 const WEEK_DAYS_EN = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const WEEK_DAYS_EN_FULL = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const WEEK_DAYS_NP = ["आइत", "सोम", "मंगल", "बुध", "बिही", "शुक्र", "शनि"];
@@ -215,41 +218,20 @@ class NepaliCalendarCard extends HTMLElement {
   async _convertUsingService(serviceName, payload) {
     if (!this._hass) throw new Error("Home Assistant is not connected");
 
-    const eventType = "nepali_calendar_conversion_result";
-    const timeoutMs = 5000;
-
-    const matchesInput = (evtData) => {
-      if (!evtData || evtData.direction !== serviceName) return false;
-      const input = evtData.input || {};
-      return Object.keys(payload).every((key) => input[key] === payload[key]);
-    };
-
-    return await new Promise(async (resolve, reject) => {
-      let unsubscribe = null;
-      const timer = setTimeout(() => {
-        if (unsubscribe) unsubscribe();
-        reject(new Error(`Timed out waiting for ${eventType}`));
-      }, timeoutMs);
-
-      try {
-        unsubscribe = await this._hass.connection.subscribeMessage(
-          (msg) => {
-            const evtData = msg?.event?.data;
-            if (!matchesInput(evtData)) return;
-            clearTimeout(timer);
-            if (unsubscribe) unsubscribe();
-            resolve(evtData.output || null);
-          },
-          { type: "subscribe_events", event_type: eventType },
-        );
-
-        await this._hass.callService("nepali_calendar", serviceName, payload);
-      } catch (err) {
-        clearTimeout(timer);
-        if (unsubscribe) unsubscribe();
-        reject(err);
-      }
+    const result = await this._hass.connection.sendMessagePromise({
+      type: "call_service",
+      domain: "nepali_calendar",
+      service: serviceName,
+      service_data: payload,
+      return_response: true,
     });
+
+    const response = result?.response ?? result?.service_response ?? null;
+    if (!response) {
+      throw new Error(`No response from service nepali_calendar.${serviceName}`);
+    }
+
+    return response.output ?? response;
   }
 
   //update the date components when ha dates updated
@@ -592,7 +574,7 @@ class NepaliCalendarCard extends HTMLElement {
             <input id="conv-g-date" type="date" placeholder="YYYY-MM-DD" />
             <button class="btn btn-primary" id="conv-g-btn" style="white-space:nowrap;">Convert</button>
           </div>
-          <div class="conv-result" id="conv-g-result"></div>
+          <div class="conv-result">${this._config.language === "np" ? "बिक्रम संवत्" : "Bikram Sambat"}: <span id="conv-g-result"></span></div>
         </div>
         <div>
           <label style="font-size:0.8em;color:var(--secondary-text-color);display:block;margin-bottom:4px;">BS → Gregorian</label>
@@ -602,7 +584,7 @@ class NepaliCalendarCard extends HTMLElement {
             <input id="conv-b-d" type="number" placeholder="Day" style="width:60px;" min="1" max="32" />
             <button class="btn btn-primary" id="conv-b-btn">Convert</button>
           </div>
-          <div class="conv-result" id="conv-b-result"></div>
+          <div class="conv-result">${this._config.language === "np" ? "ईश्वी" : "Ishwi Sambat"}: <span id="conv-b-result"></span></div>
         </div>
       </div>`;
   }
@@ -638,45 +620,50 @@ class NepaliCalendarCard extends HTMLElement {
       });
     });
 
-    // Converter
+    // Converter ad2bs
     root.getElementById("conv-g-btn")?.addEventListener("click", async () => {
       const val = root.getElementById("conv-g-date")?.value;
       if (!val) return;
       const [y, m, d] = val.split("-").map(Number);
       const isNP = this._config.language === "np";
       try {
-        const out = await this._convertUsingService("gregorian_to_nepali", {
+        const out = await this._convertUsingService("ad2bs", {
           year: y,
           month: m,
           day: d,
         });
+
         if (!out) throw new Error("No conversion output");
 
         const monthIndex = Number(out.bs_month) - 1;
         const mn = this._config.language === "np"
-          ? (NEPALI_MONTHS_NP[monthIndex] || out.month_name || "")
+          ? (NEPALI_MONTHS_NP[monthIndex] || out.month_name_np || "")
           : (NEPALI_MONTHS[monthIndex] || out.month_name || "");
 
-        root.getElementById("conv-g-result").innerHTML =
-          `<strong>${formatNumber(out.bs_year, isNP)} ${mn} ${formatNumber(out.bs_day, isNP)}</strong>`;
+        root.getElementById("conv-g-result").innerHTML = `<strong>${formatNumber(out.bs_year, isNP)} ${mn} ${formatNumber(out.bs_day, isNP)}</strong>`;
       } catch (e) {
         root.getElementById("conv-g-result").innerHTML = "Conversion failed.";
       }
     });
+
+    // Converter bs2ad
     root.getElementById("conv-b-btn")?.addEventListener("click", async () => {
       const y = parseInt(root.getElementById("conv-b-y")?.value);
       const m = parseInt(root.getElementById("conv-b-m")?.value);
       const d = parseInt(root.getElementById("conv-b-d")?.value);
       if (!y || !m || !d) return;
       try {
-        const out = await this._convertUsingService("nepali_to_gregorian", {
+        const out = await this._convertUsingService("bs2ad", {
           bs_year: y,
           bs_month: m,
           bs_day: d,
         });
+
         if (!out) throw new Error("No conversion output");
-        root.getElementById("conv-b-result").innerHTML =
-          `<strong>${String(out.year).padStart(4, "0")}-${String(out.month).padStart(2, "0")}-${String(out.day).padStart(2, "0")}</strong>`;
+
+        root.getElementById("conv-b-result").innerHTML = this._config.language === "np"
+          ? `<strong>${ENGLISH_MONTHS_NP[out.month - 1] || ""} ${formatNumber(out.day, true)}, ${formatNumber(out.year, true)}</strong>`
+          : `<strong>${ENGLISH_MONTHS[out.month - 1] || ""} ${formatNumber(out.day)}, ${formatNumber(out.year)}</strong>`;
       } catch (e) {
         root.getElementById("conv-b-result").innerHTML = "Conversion failed.";
       }

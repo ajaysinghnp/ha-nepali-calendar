@@ -150,7 +150,7 @@ def _register_services(hass: HomeAssistant, store: EventStore) -> None:
             ) from err
         nep = nepali_from_gregorian(greg)
         response = {
-            "direction": "gregorian_to_nepali",
+            "direction": "ad2bs",
             "input": {"year": year, "month": month, "day": day},
             "output": {
                 "bs_year": nep.year,
@@ -182,7 +182,7 @@ def _register_services(hass: HomeAssistant, store: EventStore) -> None:
             raise HomeAssistantError(f"nepali_to_gregorian: {err}")
         greg = gregorian_from_nepali(bs_year, bs_month, bs_day)
         response = {
-            "direction": "nepali_to_gregorian",
+            "direction": "bs2ad",
             "input": {"bs_year": bs_year, "bs_month": bs_month, "bs_day": bs_day},
             "output": {"year": greg.year, "month": greg.month, "day": greg.day},
         }
