@@ -31,3 +31,4 @@ play.sh
 
 device-address.txt
 config/
+.venv

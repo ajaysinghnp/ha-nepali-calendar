@@ -10,11 +10,7 @@ Registers:
 
 from __future__ import annotations
 
-import json
 import logging
-import os
-from datetime import datetime
-from typing import Any
 
 import voluptuous as vol
 
@@ -26,14 +22,11 @@ from homeassistant.helpers.typing import ConfigType
 from .const import (
     DOMAIN,
     EVENTS_FILE,
-    DATA_FILE,
-    BS_YEAR_DATA,
     SERVICE_GREGORIAN_TO_NEPALI,
     SERVICE_NEPALI_TO_GREGORIAN,
     SERVICE_ADD_EVENT,
     SERVICE_DELETE_EVENT,
     SERVICE_LIST_EVENTS,
-    NEPALI_MONTHS_ENG,
 )
 from .date_utils import (
     nepali_from_gregorian,
@@ -102,17 +95,6 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up from a config entry."""
     hass.data.setdefault(DOMAIN, {})
-
-    # ── Load optional user-supplied data override ──────────────────────────────
-    data_path = hass.config.path(DATA_FILE)
-    if os.path.exists(data_path):
-        try:
-            with open(data_path, encoding="utf-8") as fh:
-                user_data = json.load(fh)
-            BS_YEAR_DATA.update({int(k): v for k, v in user_data.items()})
-            _LOGGER.info("Loaded %d BS year entries from %s", len(user_data), data_path)
-        except (json.JSONDecodeError, OSError, ValueError) as err:
-            _LOGGER.warning("Could not load %s: %s", data_path, err)
 
     # ── Event store ─────────────────────────────────────────────────────────────
     store = EventStore(hass.config.config_dir, EVENTS_FILE)
