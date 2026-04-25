@@ -265,13 +265,14 @@ class NepaliCalendarCard extends HTMLElement {
       console.warn("NepaliCalendarCard: Home Assistant not connected, cannot get today's date from sensor");
       return null;
     }
-    const entity = this._hass.states['sensor.nepali_date'];
+    const year = this._hass.states['sensor.bs_year'];
+    const month = this._hass.states['sensor.bs_month'];
+    const day = this._hass.states['sensor.bs_day'];
 
-    const attrs = entity.attributes || {};
     return {
-      year: attrs.bs_year_eng,
-      month: attrs.bs_month,
-      day: attrs.bs_day,
+      year: year?.attributes?.bs_year_eng,
+      month: month?.attributes?.bs_month_number,
+      day: day?.attributes?.bs_day_eng,
     };
   }
 
