@@ -18,67 +18,67 @@
 //  BS Calendar Data (mirrors const.py — must be kept in sync)
 // ══════════════════════════════════════════════════════════════════════════════
 const BS_YEAR_DATA = {
-  2000:[30,32,31,32,31,30,30,30,29,30,29,31],2001:[31,31,32,31,31,31,30,29,30,29,30,30],
-  2002:[31,31,32,32,31,30,30,29,30,29,30,30],2003:[31,32,31,32,31,30,30,30,29,29,30,31],
-  2004:[30,32,31,32,31,30,30,30,29,30,29,31],2005:[31,31,32,31,31,31,30,29,30,29,30,30],
-  2006:[31,31,32,32,31,30,30,29,30,29,30,30],2007:[31,32,31,32,31,30,30,30,29,29,30,31],
-  2008:[31,31,32,31,31,31,30,29,30,29,30,30],2009:[31,31,32,32,31,30,30,29,30,29,30,31],
-  2010:[30,32,31,32,31,30,30,30,29,29,30,31],2011:[31,31,32,31,31,31,30,29,30,29,30,30],
-  2012:[31,31,32,32,31,30,30,29,30,29,30,30],2013:[31,32,31,32,31,30,30,30,29,29,30,31],
-  2014:[30,32,31,32,31,30,30,30,29,30,29,31],2015:[31,31,32,31,31,31,30,29,30,29,30,30],
-  2016:[31,31,32,32,31,30,30,29,30,29,30,30],2017:[31,32,31,32,31,30,30,30,29,29,30,31],
-  2018:[31,31,32,31,31,31,30,29,30,29,30,30],2019:[31,31,32,32,31,30,30,29,30,29,30,31],
-  2020:[30,32,31,32,31,30,30,30,29,29,30,31],2021:[31,31,32,31,31,31,30,29,30,29,30,30],
-  2022:[31,31,32,32,31,30,30,29,30,29,30,30],2023:[31,32,31,32,31,30,30,30,29,29,30,31],
-  2024:[30,32,31,32,31,30,30,30,29,30,29,31],2025:[31,31,32,31,31,31,30,29,30,29,30,30],
-  2026:[31,31,32,32,31,30,30,29,30,29,30,30],2027:[31,32,31,32,31,30,30,30,29,29,30,31],
-  2028:[31,31,32,31,31,31,30,29,30,29,30,30],2029:[31,31,32,32,31,30,30,29,30,29,30,31],
-  2030:[30,32,31,32,31,30,30,30,29,29,30,31],2031:[31,31,32,31,31,31,30,29,30,29,30,30],
-  2032:[31,31,32,32,31,30,30,29,30,29,30,30],2033:[31,32,31,32,31,30,30,30,29,29,30,31],
-  2034:[30,32,31,32,31,30,30,30,29,30,29,31],2035:[31,31,32,31,31,31,30,29,30,29,30,30],
-  2036:[31,31,32,32,31,30,30,29,30,29,30,30],2037:[31,32,31,32,31,30,30,30,29,29,30,31],
-  2038:[31,31,32,31,31,31,30,29,30,29,30,30],2039:[31,31,32,32,31,30,30,29,30,29,30,31],
-  2040:[30,32,31,32,31,30,30,30,29,29,30,31],2041:[31,31,32,31,31,31,30,29,30,29,30,30],
-  2042:[31,31,32,32,31,30,30,29,30,29,30,30],2043:[31,32,31,32,31,30,30,30,29,29,30,31],
-  2044:[30,32,31,32,31,30,30,30,29,30,29,31],2045:[31,31,32,31,31,31,30,29,30,29,30,30],
-  2046:[31,31,32,32,31,30,30,29,30,29,30,30],2047:[31,32,31,32,31,30,30,30,29,29,30,31],
-  2048:[31,31,32,31,31,31,30,29,30,29,30,30],2049:[31,31,32,32,31,30,30,29,30,29,30,31],
-  2050:[30,32,31,32,31,30,30,30,29,29,30,31],2051:[31,31,32,31,31,31,30,29,30,29,30,30],
-  2052:[31,31,32,32,31,30,30,29,30,29,30,30],2053:[31,32,31,32,31,30,30,30,29,29,30,31],
-  2054:[30,32,31,32,31,30,30,30,29,30,29,31],2055:[31,31,32,31,31,31,30,29,30,29,30,30],
-  2056:[31,31,32,32,31,30,30,29,30,29,30,30],2057:[31,32,31,32,31,30,30,30,29,29,30,31],
-  2058:[31,31,32,31,31,31,30,29,30,29,30,30],2059:[31,31,32,32,31,30,30,29,30,29,30,31],
-  2060:[30,32,31,32,31,30,30,30,29,29,30,31],2061:[31,31,32,31,31,31,30,29,30,29,30,30],
-  2062:[31,31,32,32,31,30,30,29,30,29,30,30],2063:[31,32,31,32,31,30,30,30,29,29,30,31],
-  2064:[30,32,31,32,31,30,30,30,29,30,29,31],2065:[31,31,32,31,31,31,30,29,30,29,30,30],
-  2066:[31,31,32,32,31,30,30,29,30,29,30,30],2067:[31,32,31,32,31,30,30,30,29,29,30,31],
-  2068:[31,31,32,31,31,31,30,29,30,29,30,30],2069:[31,31,32,32,31,30,30,29,30,29,30,31],
-  2070:[30,32,31,32,31,30,30,30,29,29,30,31],2071:[31,31,32,31,31,31,30,29,30,29,30,30],
-  2072:[31,31,32,32,31,30,30,29,30,29,30,30],2073:[31,32,31,32,31,30,30,30,29,29,30,31],
-  2074:[30,32,31,32,31,30,30,30,29,30,29,31],2075:[31,31,32,31,31,31,30,29,30,29,30,30],
-  2076:[31,31,32,32,31,30,30,29,30,29,30,30],2077:[31,32,31,32,31,30,30,30,29,29,30,31],
-  2078:[31,31,32,31,31,31,30,29,30,29,30,30],2079:[31,31,32,32,31,30,30,29,30,29,30,31],
-  2080:[31,31,32,32,31,30,30,29,30,29,30,30],2081:[31,31,32,31,31,31,30,29,30,30,29,31],
-  2082:[31,32,31,32,31,30,30,29,30,29,30,30],2083:[31,31,32,31,31,31,29,30,30,29,30,30],
-  2084:[31,31,32,31,31,31,30,29,30,29,30,30],2085:[31,32,31,32,31,30,30,29,30,29,30,31],
-  2086:[30,32,31,32,31,30,30,30,29,29,30,31],2087:[31,31,32,31,31,31,30,29,30,29,30,30],
-  2088:[31,31,32,32,31,30,30,29,30,29,30,30],2089:[31,32,31,32,31,30,30,30,29,29,30,31],
-  2090:[30,32,31,32,31,30,30,30,29,30,29,31],2091:[31,31,32,31,31,31,30,29,30,29,30,30],
-  2092:[31,31,32,32,31,30,30,29,30,29,30,30],2093:[31,32,31,32,31,30,30,30,29,29,30,31],
-  2094:[30,32,31,32,31,30,30,30,29,30,29,31],2095:[31,31,32,31,31,31,30,29,30,29,30,30],
-  2096:[31,31,32,32,31,30,30,29,30,29,30,30],2097:[31,32,31,32,31,30,30,30,29,29,30,31],
-  2098:[31,31,32,31,31,31,30,29,30,29,30,30],2099:[31,31,32,32,31,30,30,29,30,29,30,31],
-  2100:[30,32,31,32,31,30,30,30,29,29,30,31],
+  2000: [30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31], 2001: [31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
+  2002: [31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30], 2003: [31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31],
+  2004: [30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31], 2005: [31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
+  2006: [31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30], 2007: [31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31],
+  2008: [31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30], 2009: [31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 31],
+  2010: [30, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31], 2011: [31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
+  2012: [31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30], 2013: [31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31],
+  2014: [30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31], 2015: [31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
+  2016: [31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30], 2017: [31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31],
+  2018: [31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30], 2019: [31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 31],
+  2020: [30, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31], 2021: [31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
+  2022: [31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30], 2023: [31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31],
+  2024: [30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31], 2025: [31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
+  2026: [31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30], 2027: [31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31],
+  2028: [31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30], 2029: [31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 31],
+  2030: [30, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31], 2031: [31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
+  2032: [31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30], 2033: [31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31],
+  2034: [30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31], 2035: [31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
+  2036: [31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30], 2037: [31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31],
+  2038: [31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30], 2039: [31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 31],
+  2040: [30, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31], 2041: [31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
+  2042: [31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30], 2043: [31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31],
+  2044: [30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31], 2045: [31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
+  2046: [31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30], 2047: [31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31],
+  2048: [31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30], 2049: [31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 31],
+  2050: [30, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31], 2051: [31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
+  2052: [31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30], 2053: [31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31],
+  2054: [30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31], 2055: [31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
+  2056: [31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30], 2057: [31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31],
+  2058: [31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30], 2059: [31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 31],
+  2060: [30, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31], 2061: [31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
+  2062: [31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30], 2063: [31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31],
+  2064: [30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31], 2065: [31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
+  2066: [31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30], 2067: [31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31],
+  2068: [31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30], 2069: [31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 31],
+  2070: [30, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31], 2071: [31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
+  2072: [31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30], 2073: [31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31],
+  2074: [30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31], 2075: [31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
+  2076: [31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30], 2077: [31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31],
+  2078: [31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30], 2079: [31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 31],
+  2080: [31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30], 2081: [31, 31, 32, 31, 31, 31, 30, 29, 30, 30, 29, 31],
+  2082: [31, 32, 31, 32, 31, 30, 30, 29, 30, 29, 30, 30], 2083: [31, 31, 32, 31, 31, 31, 29, 30, 30, 29, 30, 30],
+  2084: [31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30], 2085: [31, 32, 31, 32, 31, 30, 30, 29, 30, 29, 30, 31],
+  2086: [30, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31], 2087: [31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
+  2088: [31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30], 2089: [31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31],
+  2090: [30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31], 2091: [31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
+  2092: [31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30], 2093: [31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31],
+  2094: [30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31], 2095: [31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
+  2096: [31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30], 2097: [31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31],
+  2098: [31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30], 2099: [31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 31],
+  2100: [30, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31],
 };
 
-const NEPALI_MONTHS    = ["Baisakh","Jestha","Ashadh","Shrawan","Bhadra","Ashwin","Kartik","Mangsir","Poush","Magh","Falgun","Chaitra"];
-const NEPALI_MONTHS_NP = ["बैशाख","जेठ","असार","साउन","भदौ","आश्विन","कार्तिक","मंसिर","पौष","माघ","फाल्गुन","चैत"];
-const WEEK_DAYS_EN     = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-const WEEK_DAYS_NP     = ["आइत","सोम","मंगल","बुध","बिही","शुक्र","शनि"];
+const NEPALI_MONTHS = ["Baisakh", "Jestha", "Ashadh", "Shrawan", "Bhadra", "Ashwin", "Kartik", "Mangsir", "Poush", "Magh", "Falgun", "Chaitra"];
+const NEPALI_MONTHS_NP = ["बैशाख", "जेठ", "असार", "साउन", "भदौ", "आश्विन", "कार्तिक", "मंसिर", "पौष", "माघ", "फाल्गुन", "चैत"];
+const WEEK_DAYS_EN = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const WEEK_DAYS_NP = ["आइत", "सोम", "मंगल", "बुध", "बिही", "शुक्र", "शनि"];
 
 // ── Reference: Gregorian 2024-04-14 = BS 2081-01-01 ──────────────────────────
-const REF_GREG = new Date(2024, 3, 14); // month is 0-indexed
-const REF_BS   = { year: 2081, month: 1, day: 1 };
+const REF_GREG = new Date(1992, 6, 30); // month is 0-indexed
+const REF_BS = { year: 2049, month: 6, day: 30 };
 
 // ── BS Math helpers ───────────────────────────────────────────────────────────
 function daysInBsMonth(year, month) {
@@ -89,14 +89,14 @@ function daysInBsMonth(year, month) {
 
 function gregToBS(date) {
   const msPerDay = 86400000;
-  const delta    = Math.round((date - REF_GREG) / msPerDay);
+  const delta = Math.round((date - REF_GREG) / msPerDay);
 
   let { year, month, day } = REF_BS;
   let remaining = delta;
 
   if (remaining >= 0) {
     while (remaining > 0) {
-      const dim  = daysInBsMonth(year, month);
+      const dim = daysInBsMonth(year, month);
       const left = dim - day;
       if (remaining <= left) { day += remaining; remaining = 0; }
       else { remaining -= left + 1; day = 1; month++; if (month > 12) { month = 1; year++; } }
@@ -123,10 +123,10 @@ function bsToGreg(bsYear, bsMonth, bsDay) {
     for (let mo = 1; mo < m; mo++) total += months[mo - 1] || 30;
     return total + d - 1;
   }
-  const refOffset  = daysSinceEpoch(REF_BS.year, REF_BS.month, REF_BS.day);
-  const tgtOffset  = daysSinceEpoch(bsYear, bsMonth, bsDay);
-  const delta      = tgtOffset - refOffset;
-  const result     = new Date(REF_GREG);
+  const refOffset = daysSinceEpoch(REF_BS.year, REF_BS.month, REF_BS.day);
+  const tgtOffset = daysSinceEpoch(bsYear, bsMonth, bsDay);
+  const delta = tgtOffset - refOffset;
+  const result = new Date(REF_GREG);
   result.setDate(result.getDate() + delta);
   return result;
 }
@@ -145,31 +145,31 @@ class NepaliCalendarCard extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
-    this._config   = {};
-    this._hass     = null;
-    this._today    = todayBS();
-    this._viewYear  = this._today.year;
+    this._config = {};
+    this._hass = null;
+    this._today = todayBS();
+    this._viewYear = this._today.year;
     this._viewMonth = this._today.month;
-    this._events    = {};   // { "bsYear-bsMonth-bsDay": [eventObj, …] }
-    this._dialog    = null;
+    this._events = {};   // { "bsYear-bsMonth-bsDay": [eventObj, …] }
+    this._dialog = null;
   }
 
   // ── HA card protocol ────────────────────────────────────────────────────────
   static getConfigElement() { return document.createElement("nepali-calendar-card-editor"); }
-  static getStubConfig()    { return { show_gregorian: true, highlight_weekends: true, language: "en" }; }
+  static getStubConfig() { return { show_gregorian: true, highlight_weekends: true, language: "en" }; }
 
   setConfig(config) {
     this._config = {
-      title:               config.title               ?? "Nepali Calendar",
-      show_gregorian:      config.show_gregorian      ?? true,
-      highlight_weekends:  config.highlight_weekends  ?? true,
-      language:            config.language            ?? "en",
-      primary_color:       config.primary_color       ?? "var(--primary-color)",
-      weekend_color:       config.weekend_color       ?? "#e74c3c",
-      today_color:         config.today_color         ?? "var(--accent-color, #ff9800)",
-      event_color:         config.event_color         ?? "#27ae60",
-      show_converter:      config.show_converter      ?? false,
-      font_size:           config.font_size           ?? "14px",
+      title: config.title ?? "Nepali Calendar",
+      show_gregorian: config.show_gregorian ?? true,
+      highlight_weekends: config.highlight_weekends ?? true,
+      language: config.language ?? "en",
+      primary_color: config.primary_color ?? "var(--primary-color)",
+      weekend_color: config.weekend_color ?? "#e74c3c",
+      today_color: config.today_color ?? "var(--accent-color, #ff9800)",
+      event_color: config.event_color ?? "#27ae60",
+      show_converter: config.show_converter ?? false,
+      font_size: config.font_size ?? "14px",
       ...config,
     };
   }
@@ -208,25 +208,26 @@ class NepaliCalendarCard extends HTMLElement {
     try {
       // Fetch events via HA's calendar API endpoint
       const start = bsToGreg(this._viewYear, 1, 1);
-      const end   = bsToGreg(this._viewYear, 12, 32 > daysInBsMonth(this._viewYear, 12)
+      const end = bsToGreg(this._viewYear, 12, 32 > daysInBsMonth(this._viewYear, 12)
         ? daysInBsMonth(this._viewYear, 12) : 31);
       const startStr = start.toISOString().slice(0, 10);
-      const endStr   = end.toISOString().slice(0, 10);
+      const endStr = end.toISOString().slice(0, 10);
 
       const resp = await this._hass.callApi(
         "GET",
         `calendars/calendar.nepali_events?start=${startStr}T00:00:00&end=${endStr}T23:59:59`
       );
+
       this._events = {};
       if (Array.isArray(resp)) {
         resp.forEach(ev => {
           const greg = new Date(ev.start.date || ev.start.dateTime);
-          const bs   = gregToBS(greg);
-          const key  = `${bs.year}-${bs.month}-${bs.day}`;
+          const bs = gregToBS(greg);
+          const key = `${bs.year}-${bs.month}-${bs.day}`;
           (this._events[key] = this._events[key] || []).push({
-            id:    ev.uid || "",
+            id: ev.uid || "",
             title: ev.summary || "",
-            desc:  ev.description || "",
+            desc: ev.description || "",
           });
         });
       }
@@ -239,13 +240,13 @@ class NepaliCalendarCard extends HTMLElement {
   // ── Rendering ───────────────────────────────────────────────────────────────
   _render() {
     const c = this._config;
-    const isNP = c.language === "np";
-    const months   = isNP ? NEPALI_MONTHS_NP : NEPALI_MONTHS;
-    const weekdays = isNP ? WEEK_DAYS_NP      : WEEK_DAYS_EN;
+    const isNP = true | c.language === "np";
+    const months = isNP ? NEPALI_MONTHS_NP : NEPALI_MONTHS;
+    const weekdays = isNP ? WEEK_DAYS_NP : WEEK_DAYS_EN;
 
-    const year  = this._viewYear;
+    const year = this._viewYear;
     const month = this._viewMonth;
-    const dim   = daysInBsMonth(year, month);
+    const dim = daysInBsMonth(year, month);
     const startWD = firstWeekdayOfBsMonth(year, month); // 0=Sun
 
     const { year: ty, month: tm, day: td } = this._today;
@@ -263,47 +264,47 @@ class NepaliCalendarCard extends HTMLElement {
     const gridHTML = rows.map(row => `
       <tr>
         ${row.map((day, col) => {
-          if (!day) return "<td></td>";
-          const isToday   = isCurrentMonth && day === td;
-          const isWeekend = (col === 0 || col === 6) && c.highlight_weekends;
-          const key = `${year}-${month}-${day}`;
-          const evts = this._events[key] || [];
-          const hasEvent = evts.length > 0;
+      if (!day) return "<td></td>";
+      const isToday = isCurrentMonth && day === td;
+      const isWeekend = (col === 0 || col === 6) && c.highlight_weekends;
+      const key = `${year}-${month}-${day}`;
+      const evts = this._events[key] || [];
+      const hasEvent = evts.length > 0;
 
-          // Compute Gregorian date
-          let gregLabel = "";
-          if (c.show_gregorian) {
-            try {
-              const g = bsToGreg(year, month, day);
-              gregLabel = `<span class="greg">${g.getDate()}</span>`;
-            } catch(_) {}
-          }
+      // Compute Gregorian date
+      let gregLabel = "";
+      if (c.show_gregorian) {
+        try {
+          const g = bsToGreg(year, month, day);
+          gregLabel = `<span class="greg">${g.getDate()}</span>`;
+        } catch (_) { }
+      }
 
-          const dots = hasEvent
-            ? `<span class="dots">${evts.slice(0,3).map(e =>
-                `<span class="dot" title="${e.title}" style="background:${c.event_color}"></span>`
-              ).join("")}</span>`
-            : "";
+      const dots = hasEvent
+        ? `<span class="dots">${evts.slice(0, 3).map(e =>
+          `<span class="dot" title="${e.title}" style="background:${c.event_color}"></span>`
+        ).join("")}</span>`
+        : "";
 
-          const cls = [
-            "day-cell",
-            isToday   ? "today"   : "",
-            isWeekend ? "weekend" : "",
-            hasEvent  ? "has-event" : "",
-          ].filter(Boolean).join(" ");
+      const cls = [
+        "day-cell",
+        isToday ? "today" : "",
+        isWeekend ? "weekend" : "",
+        hasEvent ? "has-event" : "",
+      ].filter(Boolean).join(" ");
 
-          const style = isToday
-            ? `background:${c.today_color};color:#fff;`
-            : isWeekend
-              ? `color:${c.weekend_color};`
-              : "";
+      const style = isToday
+        ? `background:${c.today_color};color:#fff;`
+        : isWeekend
+          ? `color:${c.weekend_color};`
+          : "";
 
-          return `<td class="${cls}" style="${style}" data-day="${day}">
+      return `<td class="${cls}" style="${style}" data-day="${day}">
             <span class="bs-day">${day}</span>
             ${gregLabel}
             ${dots}
           </td>`;
-        }).join("")}
+    }).join("")}
       </tr>
     `).join("");
 
@@ -468,7 +469,7 @@ class NepaliCalendarCard extends HTMLElement {
     });
     root.getElementById("goto-today")?.addEventListener("click", () => {
       this._today = todayBS();
-      this._viewYear  = this._today.year;
+      this._viewYear = this._today.year;
       this._viewMonth = this._today.month;
       this._render();
       this._loadEventsFromApi();
@@ -500,8 +501,8 @@ class NepaliCalendarCard extends HTMLElement {
       try {
         const g = bsToGreg(y, m, d);
         root.getElementById("conv-b-result").innerHTML =
-          `<strong>${g.toISOString().slice(0,10)}</strong>`;
-      } catch(e) {
+          `<strong>${g.toISOString().slice(0, 10)}</strong>`;
+      } catch (e) {
         root.getElementById("conv-b-result").innerHTML = "Invalid date.";
       }
     });
@@ -509,13 +510,13 @@ class NepaliCalendarCard extends HTMLElement {
 
   // ── Day dialog ──────────────────────────────────────────────────────────────
   _openDayDialog(year, month, day) {
-    const key  = `${year}-${month}-${day}`;
+    const key = `${year}-${month}-${day}`;
     const evts = this._events[key] || [];
     const isNP = this._config.language === "np";
-    const mn   = isNP ? NEPALI_MONTHS_NP[month - 1] : NEPALI_MONTHS[month - 1];
+    const mn = isNP ? NEPALI_MONTHS_NP[month - 1] : NEPALI_MONTHS[month - 1];
 
     let gDateStr = "";
-    try { gDateStr = bsToGreg(year, month, day).toISOString().slice(0, 10); } catch(_) {}
+    try { gDateStr = bsToGreg(year, month, day).toISOString().slice(0, 10); } catch (_) { }
 
     const eventListHTML = evts.length
       ? `<div class="event-list">${evts.map(e => `
@@ -551,9 +552,9 @@ class NepaliCalendarCard extends HTMLElement {
     overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
 
     overlay.querySelector("#dlg-save").onclick = async () => {
-      const title  = overlay.querySelector("#dlg-title").value.trim();
+      const title = overlay.querySelector("#dlg-title").value.trim();
       if (!title) { overlay.querySelector("#dlg-title").focus(); return; }
-      const desc   = overlay.querySelector("#dlg-desc").value.trim();
+      const desc = overlay.querySelector("#dlg-desc").value.trim();
       const annual = overlay.querySelector("#dlg-annual").checked;
       await this._callService("add_event", {
         title, bs_year: year, bs_month: month, bs_day: day,
@@ -578,7 +579,7 @@ class NepaliCalendarCard extends HTMLElement {
     if (!this._hass) return;
     try {
       await this._hass.callService("nepali_calendar", service, data);
-    } catch(e) {
+    } catch (e) {
       console.error("nepali-calendar-card: service call failed", e);
     }
   }
@@ -588,11 +589,11 @@ customElements.define("nepali-calendar-card", NepaliCalendarCard);
 
 window.customCards = window.customCards || [];
 window.customCards.push({
-  type:         "nepali-calendar-card",
-  name:         "Nepali Calendar Card",
-  description:  "A Bikram Sambat calendar with event management and date conversion.",
-  preview:      true,
-  documentationURL: "https://github.com/your-username/ha-nepali-calendar",
+  type: "nepali-calendar-card",
+  name: "Nepali Calendar Card",
+  description: "A Bikram Sambat calendar with event management and date conversion.",
+  preview: true,
+  documentationURL: "https://github.com/ajaysinghnp/ha-nepali-calendar",
 });
 
 console.info(

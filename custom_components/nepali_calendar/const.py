@@ -4,33 +4,64 @@ DOMAIN = "nepali_calendar"
 PLATFORM_SENSOR = "sensor"
 PLATFORM_CALENDAR = "calendar"
 
+NEPALI_NUMERALS = ["०", "१", "२", "३", "४", "५", "६", "७", "८", "९"]
+
+
 # --- Names ---
-NEPALI_MONTHS = [
-    "Baisakh", "Jestha", "Ashadh", "Shrawan",
-    "Bhadra", "Ashwin", "Kartik", "Mangsir",
-    "Poush", "Magh", "Falgun", "Chaitra",
+NEPALI_MONTHS_ENG = [
+    "Baisakh",
+    "Jestha",
+    "Ashadh",
+    "Shrawan",
+    "Bhadra",
+    "Ashwin",
+    "Kartik",
+    "Mangsir",
+    "Poush",
+    "Magh",
+    "Falgun",
+    "Chaitra",
 ]
 
 NEPALI_MONTHS_NP = [
-    "बैशाख", "जेठ", "असार", "साउन",
-    "भदौ", "आश्विन", "कार्तिक", "मंसिर",
-    "पौष", "माघ", "फाल्गुन", "चैत",
+    "बैशाख",
+    "जेठ",
+    "असार",
+    "साउन",
+    "भदौ",
+    "आश्विन",
+    "कार्तिक",
+    "मंसिर",
+    "पौष",
+    "माघ",
+    "फाल्गुन",
+    "चैत",
 ]
 
 NEPALI_DAYS = [
-    "Aaitabar", "Sombar", "Mangalbar", "Budhbar",
-    "Bihibar", "Sukrabar", "Sanibar",
+    "Aaitabar",
+    "Sombar",
+    "Mangalbar",
+    "Budhbar",
+    "Bihibar",
+    "Sukrabar",
+    "Sanibar",
 ]
 
 NEPALI_DAYS_NP = [
-    "आइतबार", "सोमबार", "मंगलबार", "बुधबार",
-    "बिहीबार", "शुक्रबार", "शनिबार",
+    "आइतबार",
+    "सोमबार",
+    "मंगलबार",
+    "बुधबार",
+    "बिहीबार",
+    "शुक्रबार",
+    "शनिबार",
 ]
 
 # ── Reference date ─────────────────────────────────────────────────────────────
-# Gregorian 2024-04-14  ↔  BS 2081-01-01  (Baisakh 1, 2081)
-REFERENCE_GREGORIAN = (2024, 4, 14)   # (year, month, day)
-REFERENCE_BS        = (2081, 1, 1)    # (bs_year, bs_month_1_indexed, bs_day)
+# Gregorian 1992-06-30  ↔  BS 2049-03-16  (Asar 16, 2049)
+REFERENCE_GREGORIAN = (1992, 6, 30)  # (year, month, day)
+REFERENCE_BS = (2049, 3, 16)  # (bs_year, bs_month_1_indexed, bs_day)
 
 # ── BS Calendar Data ────────────────────────────────────────────────────────────
 # Each row: [Baisakh, Jestha, Ashadh, Shrawan, Bhadra, Ashwin,
@@ -119,7 +150,20 @@ BS_YEAR_DATA: dict[int, list[int]] = {
     2078: [31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
     2079: [31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 31],
     2080: [31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30],
-    2081: [31, 31, 32, 31, 31, 31, 30, 29, 30, 30, 29, 30],  # sum=365; 2082-01-01=2025-04-14
+    2081: [
+        31,
+        31,
+        32,
+        31,
+        31,
+        31,
+        30,
+        29,
+        30,
+        30,
+        29,
+        30,
+    ],  # sum=365; 2082-01-01=2025-04-14
     2082: [31, 32, 31, 32, 31, 30, 30, 29, 30, 29, 30, 30],
     2083: [31, 31, 32, 31, 31, 31, 29, 30, 30, 29, 30, 30],
     2084: [31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
@@ -145,25 +189,27 @@ BS_MIN_YEAR = min(BS_YEAR_DATA.keys())
 BS_MAX_YEAR = max(BS_YEAR_DATA.keys())
 
 # Attribute names
-ATTR_BS_YEAR   = "bs_year"
-ATTR_BS_MONTH  = "bs_month"
-ATTR_BS_DAY    = "bs_day"
-ATTR_BS_MONTH_NAME    = "bs_month_name"
+ATTR_BS_YEAR_ENG = "bs_year_eng"
+ATTR_BS_YEAR_NP = "bs_year_np"
+ATTR_BS_MONTH = "bs_month"
+ATTR_BS_DAY = "bs_day"
+ATTR_BS_MONTH_NAME = "bs_month_name"
 ATTR_BS_MONTH_NAME_NP = "bs_month_name_np"
-ATTR_BS_DAY_OF_WEEK   = "bs_day_of_week"
-ATTR_GREGORIAN_DATE   = "gregorian_date"
-ATTR_DAYS_IN_MONTH    = "days_in_month"
+ATTR_BS_DAY_OF_WEEK = "bs_day_of_week"
+ATTR_BS_DAY_OF_WEEK_NP = "bs_day_of_week_np"
+ATTR_GREGORIAN_DATE = "gregorian_date"
+ATTR_DAYS_IN_MONTH = "days_in_month"
 
 # Service names
 SERVICE_GREGORIAN_TO_NEPALI = "gregorian_to_nepali"
 SERVICE_NEPALI_TO_GREGORIAN = "nepali_to_gregorian"
-SERVICE_ADD_EVENT    = "add_event"
+SERVICE_ADD_EVENT = "add_event"
 SERVICE_DELETE_EVENT = "delete_event"
-SERVICE_LIST_EVENTS  = "list_events"
+SERVICE_LIST_EVENTS = "list_events"
 
 # Storage
 EVENTS_FILE = "nepali_events.json"
-DATA_FILE   = "nepali_calendar_data.json"
+DATA_FILE = "nepali_calendar_data.json"
 
 # Config keys
 CONF_SHOW_GREGORIAN = "show_gregorian"

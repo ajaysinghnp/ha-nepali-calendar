@@ -10,10 +10,13 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.event import async_track_time_change
+from sqlalchemy import true
 
 from .const import (
+    ATTR_BS_DAY_OF_WEEK_NP,
     DOMAIN,
-    ATTR_BS_YEAR,
+    ATTR_BS_YEAR_ENG,
+    ATTR_BS_YEAR_NP,
     ATTR_BS_MONTH,
     ATTR_BS_DAY,
     ATTR_BS_MONTH_NAME,
@@ -44,14 +47,14 @@ async def async_setup_entry(
 class NepaliDateSensor(SensorEntity):
     """Sensor showing the current Nepali (BS) date."""
 
-    _attr_unique_id     = "nepali_calendar_today"
-    _attr_name          = "Nepali Date"
-    _attr_icon          = "mdi:calendar-today"
+    _attr_unique_id = "nepali_calendar_today"
+    _attr_name = "Nepali Date"
+    _attr_icon = "mdi:calendar-today"
     _attr_has_entity_name = True
 
     def __init__(self, hass: HomeAssistant) -> None:
         self._hass = hass
-        self._bs   = today_nepali()
+        self._bs = today_nepali()
         self._unsub = None
 
     async def async_added_to_hass(self) -> None:
@@ -77,7 +80,7 @@ class NepaliDateSensor(SensorEntity):
 
     @property
     def state(self) -> str:
-        return str(self._bs)   # e.g. "2081 Baisakh 15"
+        return str(self._bs)  # e.g. "2081 Baisakh 15"
 
     @property
     def extra_state_attributes(self) -> dict:
@@ -85,13 +88,17 @@ class NepaliDateSensor(SensorEntity):
         greg = datetime.date.today()
         dow = bs_day_of_week(bs.year, bs.month, bs.day)
         return {
-            ATTR_BS_YEAR:         bs.year,
-            ATTR_BS_MONTH:        bs.month,
-            ATTR_BS_DAY:          bs.day,
-            ATTR_BS_MONTH_NAME:   bs.month_name,
+            ATTR_BS_YEAR_ENG: bs.year,
+            # ATTR_BS_YEAR_NP: bs.year_np,
+            ATTR_BS_MONTH: bs.month,
+            ATTR_BS_DAY: bs.day,
+            ATTR_BS_MONTH_NAME: bs.month_name_eng,
             ATTR_BS_MONTH_NAME_NP: bs.month_name_np,
-            ATTR_BS_DAY_OF_WEEK:  bs_day_of_week_name(bs.year, bs.month, bs.day),
-            ATTR_GREGORIAN_DATE:  greg.isoformat(),
-            ATTR_DAYS_IN_MONTH:   days_in_bs_month(bs.year, bs.month),
-            "isoformat":          bs.isoformat(),
+            ATTR_BS_DAY_OF_WEEK: bs_day_of_week_name(bs.year, bs.month, bs.day),
+            ATTR_BS_DAY_OF_WEEK_NP: bs_day_of_week_name(
+                bs.year, bs.month, bs.day, True
+            ),
+            ATTR_GREGORIAN_DATE: greg.isoformat(),
+            ATTR_DAYS_IN_MONTH: days_in_bs_month(bs.year, bs.month),
+            "isoformat": bs.isoformat(),
         }

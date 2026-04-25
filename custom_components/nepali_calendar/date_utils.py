@@ -14,17 +14,19 @@ Algorithm
 
 from __future__ import annotations
 
-import datetime
+import datetime as dt
+import nepali_datetime as ndt
 from typing import NamedTuple
 
 from .const import (
     BS_YEAR_DATA,
     BS_MIN_YEAR,
     BS_MAX_YEAR,
-    NEPALI_MONTHS,
+    NEPALI_MONTHS_ENG,
     NEPALI_MONTHS_NP,
     NEPALI_DAYS,
     NEPALI_DAYS_NP,
+    NEPALI_NUMERALS,
     REFERENCE_GREGORIAN,
     REFERENCE_BS,
 )
@@ -32,20 +34,25 @@ from .const import (
 
 class NepaliDate(NamedTuple):
     year: int
-    month: int   # 1-indexed (1 = Baisakh … 12 = Chaitra)
+    month: int  # 1-indexed (1 = Baisakh … 12 = Chaitra)
     day: int
 
     # ── convenient string representations ──────────────────────────────────────
     @property
-    def month_name(self) -> str:
-        return NEPALI_MONTHS[self.month - 1]
+    def month_name_eng(self) -> str:
+        return NEPALI_MONTHS_ENG[self.month - 1]
 
     @property
     def month_name_np(self) -> str:
         return NEPALI_MONTHS_NP[self.month - 1]
 
+    @property
+    def year_np(self) -> str:
+        year = str(self.year)  # e.g. "2081"
+        return "".join(NEPALI_NUMERALS[int(digit)] for digit in year)
+
     def __str__(self) -> str:
-        return f"{self.year} {self.month_name} {self.day}"
+        return f"{self.year_np} {self.month_name_np} {self.day}"
 
     def isoformat(self) -> str:
         return f"{self.year:04d}-{self.month:02d}-{self.day:02d}"
@@ -60,6 +67,7 @@ class NepaliDate(NamedTuple):
 
 
 # ── Internal helpers ────────────────────────────────────────────────────────────
+
 
 def _days_in_bs_year(bs_year: int) -> int:
     """Total days in a BS year (sum of all 12 months)."""
@@ -98,80 +106,29 @@ def _bs_days_from_reference(bs_year: int, bs_month: int, bs_day: int) -> int:
         total += d - 1
         return total
 
-    return _days_since_epoch(bs_year, bs_month, bs_day) - \
-           _days_since_epoch(ref_year, ref_month, ref_day)
+    return _days_since_epoch(bs_year, bs_month, bs_day) - _days_since_epoch(
+        ref_year, ref_month, ref_day
+    )
 
 
 # ── Public API ──────────────────────────────────────────────────────────────────
 
-def nepali_from_gregorian(greg_date: datetime.date) -> NepaliDate:
+
+def nepali_from_gregorian(greg_date: dt.date) -> NepaliDate:
     """Convert a Gregorian date to its Bikram Sambat equivalent."""
-    ref_greg = datetime.date(*REFERENCE_GREGORIAN)           # 2024-04-14
-    delta = (greg_date - ref_greg).days                      # signed offset
-
-    ref_year, ref_month, ref_day = REFERENCE_BS             # 2081, 1, 1
-
-    bs_year  = ref_year
-    bs_month = ref_month
-    bs_day   = ref_day
-
-    if delta >= 0:
-        # walk forward
-        remaining = delta
-        while remaining > 0:
-            days_this_month = _get_year_data(bs_year)[bs_month - 1]
-            days_left_in_month = days_this_month - bs_day
-            if remaining <= days_left_in_month:
-                bs_day += remaining
-                remaining = 0
-            else:
-                remaining -= (days_left_in_month + 1)
-                bs_day = 1
-                bs_month += 1
-                if bs_month > 12:
-                    bs_month = 1
-                    bs_year += 1
-    else:
-        # walk backward
-        remaining = -delta
-        while remaining > 0:
-            if remaining < bs_day:
-                bs_day -= remaining
-                remaining = 0
-            else:
-                remaining -= bs_day
-                bs_month -= 1
-                if bs_month < 1:
-                    bs_month = 12
-                    bs_year -= 1
-                bs_day = _get_year_data(bs_year)[bs_month - 1]
-
-    return NepaliDate(bs_year, bs_month, bs_day)
+    tndt = ndt.datetime.from_datetime_date(greg_date)
+    return NepaliDate(tndt.date().year, tndt.date().month, tndt.date().day)
 
 
-def gregorian_from_nepali(bs_year: int, bs_month: int, bs_day: int) -> datetime.date:
+def gregorian_from_nepali(bs_year: int, bs_month: int, bs_day: int) -> dt.date:
     """Convert a Bikram Sambat date to its Gregorian equivalent."""
-    # validate
-    if bs_year not in BS_YEAR_DATA:
-        raise ValueError(f"BS year {bs_year} not in data table.")
-    month_data = _get_year_data(bs_year)
-    if not (1 <= bs_month <= 12):
-        raise ValueError(f"BS month must be 1–12, got {bs_month}.")
-    max_day = month_data[bs_month - 1]
-    if not (1 <= bs_day <= max_day):
-        raise ValueError(
-            f"BS day {bs_day} is out of range for {NEPALI_MONTHS[bs_month-1]} "
-            f"{bs_year} (1–{max_day})."
-        )
-
-    day_offset = _bs_days_from_reference(bs_year, bs_month, bs_day)
-    ref_greg = datetime.date(*REFERENCE_GREGORIAN)
-    return ref_greg + datetime.timedelta(days=day_offset)
+    return ndt.date(bs_year, bs_month, bs_day).to_datetime_date()
 
 
 def today_nepali() -> NepaliDate:
     """Return today's date as a NepaliDate."""
-    return nepali_from_gregorian(datetime.date.today())
+    today = ndt.date.today()
+    return NepaliDate(today.year, today.month, today.day)
 
 
 def days_in_bs_month(bs_year: int, bs_month: int) -> int:
@@ -185,13 +142,14 @@ def bs_day_of_week(bs_year: int, bs_month: int, bs_day: int) -> int:
     return greg.isoweekday()
 
 
-def bs_day_of_week_name(bs_year: int, bs_month: int, bs_day: int,
-                         nepali: bool = False) -> str:
+def bs_day_of_week_name(
+    bs_year: int, bs_month: int, bs_day: int, nepali: bool = False
+) -> str:
     """Return the day-of-week name for a BS date."""
     dow = bs_day_of_week(bs_year, bs_month, bs_day)  # 1=Mon … 7=Sun
     # Our NEPALI_DAYS list is Sun-first (index 0 = Sunday)
     # ISO: 1=Mon, 7=Sun  →  convert to 0=Sun
-    idx = dow % 7   # Mon=1→1, …, Sat=6→6, Sun=7→0
+    idx = dow % 7  # Mon=1→1, …, Sat=6→6, Sun=7→0
     if nepali:
         return NEPALI_DAYS_NP[idx]
     return NEPALI_DAYS[idx]
@@ -199,7 +157,7 @@ def bs_day_of_week_name(bs_year: int, bs_month: int, bs_day: int,
 
 def first_weekday_of_month(bs_year: int, bs_month: int) -> int:
     """Return the weekday index (0=Sun, 6=Sat) of the 1st day of a BS month."""
-    dow = bs_day_of_week(bs_year, bs_month, 1)   # ISO 1-7
+    dow = ndt.date(bs_year, bs_month, 1).weekday()  # ISO 1-7
     return dow % 7  # 0=Sun … 6=Sat
 
 
@@ -208,8 +166,8 @@ def bs_month_calendar(bs_year: int, bs_month: int) -> list[list[int | None]]:
     Return a list of weeks for a BS month.
     Each week is a 7-element list (Sun … Sat) of day numbers or None.
     """
-    total_days    = days_in_bs_month(bs_year, bs_month)
-    start_weekday = first_weekday_of_month(bs_year, bs_month)   # 0=Sun
+    total_days = days_in_bs_month(bs_year, bs_month)
+    start_weekday = first_weekday_of_month(bs_year, bs_month)  # 0=Sun
 
     weeks: list[list[int | None]] = []
     week: list[int | None] = [None] * start_weekday
@@ -245,5 +203,5 @@ def validate_bs_date(bs_year: int, bs_month: int, bs_day: int) -> str | None:
         return f"Month must be 1–12."
     max_day = BS_YEAR_DATA[bs_year][bs_month - 1]
     if not (1 <= bs_day <= max_day):
-        return f"Day {bs_day} out of range (1–{max_day}) for {NEPALI_MONTHS[bs_month-1]} {bs_year}."
+        return f"Day {bs_day} out of range (1–{max_day}) for {NEPALI_MONTHS_ENG[bs_month - 1]} {bs_year}."
     return None
