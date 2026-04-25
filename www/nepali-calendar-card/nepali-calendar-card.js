@@ -140,9 +140,11 @@ function firstWeekdayOfBsMonth(year, month) {
 }
 
 function formatNumber(value, useNepaliDigits) {
+  if (!value) return "";
   const text = String(value);
   if (!useNepaliDigits) return text;
-  return text.replace(/\d/g, (digit) => NEPALI_DIGITS[Number(digit)]);
+  let res = text.replace(/\d/g, (digit) => NEPALI_DIGITS[Number(digit)]);
+  return res;
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -210,6 +212,46 @@ class NepaliCalendarCard extends HTMLElement {
     return this.getBoundingClientRect().width || this.clientWidth || 0;
   }
 
+  async _convertUsingService(serviceName, payload) {
+    if (!this._hass) throw new Error("Home Assistant is not connected");
+
+    const eventType = "nepali_calendar_conversion_result";
+    const timeoutMs = 5000;
+
+    const matchesInput = (evtData) => {
+      if (!evtData || evtData.direction !== serviceName) return false;
+      const input = evtData.input || {};
+      return Object.keys(payload).every((key) => input[key] === payload[key]);
+    };
+
+    return await new Promise(async (resolve, reject) => {
+      let unsubscribe = null;
+      const timer = setTimeout(() => {
+        if (unsubscribe) unsubscribe();
+        reject(new Error(`Timed out waiting for ${eventType}`));
+      }, timeoutMs);
+
+      try {
+        unsubscribe = await this._hass.connection.subscribeMessage(
+          (msg) => {
+            const evtData = msg?.event?.data;
+            if (!matchesInput(evtData)) return;
+            clearTimeout(timer);
+            if (unsubscribe) unsubscribe();
+            resolve(evtData.output || null);
+          },
+          { type: "subscribe_events", event_type: eventType },
+        );
+
+        await this._hass.callService("nepali_calendar", serviceName, payload);
+      } catch (err) {
+        clearTimeout(timer);
+        if (unsubscribe) unsubscribe();
+        reject(err);
+      }
+    });
+  }
+
   //update the date components when ha dates updated
   _updateTodayFromHass() {
     if (!this._hass) return;
@@ -227,7 +269,7 @@ class NepaliCalendarCard extends HTMLElement {
 
     const attrs = entity.attributes || {};
     return {
-      year: attrs.bs_year,
+      year: attrs.bs_year_eng,
       month: attrs.bs_month,
       day: attrs.bs_day,
     };
@@ -320,8 +362,6 @@ class NepaliCalendarCard extends HTMLElement {
     const dim = daysInBsMonth(year, month);
     const startWD = firstWeekdayOfBsMonth(year, month) - 1; // 0=Sun
 
-    console.log(c);
-
     const { year: ty, month: tm, day: td } = this._today;
     const isCurrentMonth = (year === ty && month === tm);
 
@@ -397,24 +437,35 @@ class NepaliCalendarCard extends HTMLElement {
         :host { display: block; font-size: ${c.font_size}; }
         ha-card { padding: 0; overflow: hidden; }
         .card-header {
-          display: flex; align-items: center; justify-content: space-between;
-          padding: 12px 16px;
+          display: grid;
+          grid-template-columns: auto minmax(0, 1fr) auto;
+          align-items: center;
+          justify-items: center;
+          gap: 10px;
+          padding: 8px 10px;
           background: ${c.primary_color};
           color: #fff;
         }
-        .card-header h2 { margin: 0; font-size: 1.1em; font-weight: 600; }
         .nav-btn {
           background: rgba(255,255,255,0.2); border: none; color: #fff;
-          border-radius: 50%; width: 32px; height: 32px;
-          cursor: pointer; font-size: 1.1em; display: flex; align-items: center; justify-content: center;
+          border-radius: 50%; width: 30px; height: 30px;
+          cursor: pointer; font-size: 1.05em; display: flex; align-items: center; justify-content: center;
         }
         .nav-btn:hover { background: rgba(255,255,255,0.35); }
-        .nav-center { text-align: center; }
-        .nav-center .month-title { font-size: 1.2em; font-weight: 700; }
-        .nav-center .year-title  { font-size: 0.85em; opacity: 0.85; }
+        .header-center {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+          min-width: 0;
+          white-space: nowrap;
+        }
+        .month-title { font-size: 1.02em; font-weight: 700; text-align: center; white-space: nowrap; }
+        .year-title  { font-size: 0.92em; font-weight: 600; opacity: 0.9; text-align: center; white-space: nowrap; }
         .today-btn {
           background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.4);
-          color: #fff; border-radius: 12px; padding: 3px 10px; cursor: pointer; font-size: 0.8em;
+          color: #fff; border-radius: 12px; padding: 3px 9px; cursor: pointer; font-size: 0.8em;
+          white-space: nowrap;
         }
         table { width: 100%; border-collapse: collapse; }
         th { padding: 8px 4px; text-align: center; font-size: 0.78em; font-weight: 600;
@@ -508,14 +559,12 @@ class NepaliCalendarCard extends HTMLElement {
       <ha-card>
         <div class="card-header">
           <button class="nav-btn" id="prev-month">&#8249;</button>
-          <div class="nav-center">
+          <div class="header-center">
+            ${isNP ? `<div class="year-title">बिक्रम संवत् ${formatNumber(year, isNP)}</div>` : `<div class="year-title">${formatNumber(year, isNP)} A.D.</div>`}
             <div class="month-title">${months[month - 1]}</div>
-            <div class="year-title">${formatNumber(year, isNP)} BS</div>
-          </div>
-          <div style="display:flex;gap:6px;align-items:center;">
             <button class="today-btn" id="goto-today">${isNP ? "आज" : "Today"}</button>
-            <button class="nav-btn" id="next-month">&#8250;</button>
           </div>
+          <button class="nav-btn" id="next-month">&#8250;</button>
         </div>
 
         <div style="padding:8px 12px 12px;">
@@ -575,8 +624,7 @@ class NepaliCalendarCard extends HTMLElement {
     });
     root.getElementById("goto-today")?.addEventListener("click", () => {
       this._today = this._getTodayBSFromHA();
-      this._viewYear = this._today.year;
-      this._viewMonth = this._today.month;
+      this._updateTodayFromHass();
       this._render();
       this._loadEventsFromApi();
     });
@@ -590,27 +638,46 @@ class NepaliCalendarCard extends HTMLElement {
     });
 
     // Converter
-    root.getElementById("conv-g-btn")?.addEventListener("click", () => {
+    root.getElementById("conv-g-btn")?.addEventListener("click", async () => {
       const val = root.getElementById("conv-g-date")?.value;
       if (!val) return;
       const [y, m, d] = val.split("-").map(Number);
-      const bs = gregToBS(new Date(y, m - 1, d));
       const isNP = this._config.language === "np";
-      const mn = this._config.language === "np" ? NEPALI_MONTHS_NP[bs.month - 1] : NEPALI_MONTHS[bs.month - 1];
-      root.getElementById("conv-g-result").innerHTML =
-        `<strong>${formatNumber(bs.year, isNP)} ${mn} ${formatNumber(bs.day, isNP)}</strong>`;
+      try {
+        const out = await this._convertUsingService("gregorian_to_nepali", {
+          year: y,
+          month: m,
+          day: d,
+        });
+        if (!out) throw new Error("No conversion output");
+
+        const monthIndex = Number(out.bs_month) - 1;
+        const mn = this._config.language === "np"
+          ? (NEPALI_MONTHS_NP[monthIndex] || out.month_name || "")
+          : (NEPALI_MONTHS[monthIndex] || out.month_name || "");
+
+        root.getElementById("conv-g-result").innerHTML =
+          `<strong>${formatNumber(out.bs_year, isNP)} ${mn} ${formatNumber(out.bs_day, isNP)}</strong>`;
+      } catch (e) {
+        root.getElementById("conv-g-result").innerHTML = "Conversion failed.";
+      }
     });
-    root.getElementById("conv-b-btn")?.addEventListener("click", () => {
+    root.getElementById("conv-b-btn")?.addEventListener("click", async () => {
       const y = parseInt(root.getElementById("conv-b-y")?.value);
       const m = parseInt(root.getElementById("conv-b-m")?.value);
       const d = parseInt(root.getElementById("conv-b-d")?.value);
       if (!y || !m || !d) return;
       try {
-        const g = bsToGreg(y, m, d);
+        const out = await this._convertUsingService("nepali_to_gregorian", {
+          bs_year: y,
+          bs_month: m,
+          bs_day: d,
+        });
+        if (!out) throw new Error("No conversion output");
         root.getElementById("conv-b-result").innerHTML =
-          `<strong>${g.toISOString().slice(0, 10)}</strong>`;
+          `<strong>${String(out.year).padStart(4, "0")}-${String(out.month).padStart(2, "0")}-${String(out.day).padStart(2, "0")}</strong>`;
       } catch (e) {
-        root.getElementById("conv-b-result").innerHTML = "Invalid date.";
+        root.getElementById("conv-b-result").innerHTML = "Conversion failed.";
       }
     });
   }
@@ -708,3 +775,6 @@ console.info(
   "background:#c0392b;color:#fff;font-weight:700;padding:2px 6px;border-radius:3px 0 0 3px;",
   "background:#222;color:#fff;padding:2px 6px;border-radius:0 3px 3px 0;"
 );
+
+
+// End of nepali-calendar-card.js

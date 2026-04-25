@@ -33,7 +33,7 @@ from .const import (
     SERVICE_ADD_EVENT,
     SERVICE_DELETE_EVENT,
     SERVICE_LIST_EVENTS,
-    NEPALI_MONTHS,
+    NEPALI_MONTHS_ENG,
 )
 from .date_utils import (
     nepali_from_gregorian,
@@ -48,39 +48,50 @@ PLATFORMS = ["sensor", "calendar"]
 
 # ── Schema for services ────────────────────────────────────────────────────────
 
-_GREG_TO_NEP_SCHEMA = vol.Schema({
-    vol.Required("year"):  vol.All(int, vol.Range(min=1900, max=2200)),
-    vol.Required("month"): vol.All(int, vol.Range(min=1, max=12)),
-    vol.Required("day"):   vol.All(int, vol.Range(min=1, max=31)),
-})
+_GREG_TO_NEP_SCHEMA = vol.Schema(
+    {
+        vol.Required("year"): vol.All(int, vol.Range(min=1900, max=2200)),
+        vol.Required("month"): vol.All(int, vol.Range(min=1, max=12)),
+        vol.Required("day"): vol.All(int, vol.Range(min=1, max=31)),
+    }
+)
 
-_NEP_TO_GREG_SCHEMA = vol.Schema({
-    vol.Required("bs_year"):  vol.All(int, vol.Range(min=1900, max=2200)),
-    vol.Required("bs_month"): vol.All(int, vol.Range(min=1, max=12)),
-    vol.Required("bs_day"):   vol.All(int, vol.Range(min=1, max=32)),
-})
+_NEP_TO_GREG_SCHEMA = vol.Schema(
+    {
+        vol.Required("bs_year"): vol.All(int, vol.Range(min=1900, max=2200)),
+        vol.Required("bs_month"): vol.All(int, vol.Range(min=1, max=12)),
+        vol.Required("bs_day"): vol.All(int, vol.Range(min=1, max=32)),
+    }
+)
 
-_ADD_EVENT_SCHEMA = vol.Schema({
-    vol.Required("title"):              cv.string,
-    vol.Required("bs_year"):            vol.All(int, vol.Range(min=1900, max=2200)),
-    vol.Required("bs_month"):           vol.All(int, vol.Range(min=1, max=12)),
-    vol.Required("bs_day"):             vol.All(int, vol.Range(min=1, max=32)),
-    vol.Optional("description", default=""): cv.string,
-    vol.Optional("annual", default=False):   cv.boolean,
-    vol.Optional("color", default=""):       cv.string,
-})
+_ADD_EVENT_SCHEMA = vol.Schema(
+    {
+        vol.Required("title"): cv.string,
+        vol.Required("bs_year"): vol.All(int, vol.Range(min=1900, max=2200)),
+        vol.Required("bs_month"): vol.All(int, vol.Range(min=1, max=12)),
+        vol.Required("bs_day"): vol.All(int, vol.Range(min=1, max=32)),
+        vol.Optional("description", default=""): cv.string,
+        vol.Optional("annual", default=False): cv.boolean,
+        vol.Optional("color", default=""): cv.string,
+    }
+)
 
-_DELETE_EVENT_SCHEMA = vol.Schema({
-    vol.Required("event_id"): cv.string,
-})
+_DELETE_EVENT_SCHEMA = vol.Schema(
+    {
+        vol.Required("event_id"): cv.string,
+    }
+)
 
-_LIST_EVENTS_SCHEMA = vol.Schema({
-    vol.Optional("bs_year"):  vol.All(int, vol.Range(min=1900, max=2200)),
-    vol.Optional("bs_month"): vol.All(int, vol.Range(min=1, max=12)),
-})
+_LIST_EVENTS_SCHEMA = vol.Schema(
+    {
+        vol.Optional("bs_year"): vol.All(int, vol.Range(min=1900, max=2200)),
+        vol.Optional("bs_month"): vol.All(int, vol.Range(min=1, max=12)),
+    }
+)
 
 
 # ── Setup ──────────────────────────────────────────────────────────────────────
+
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     """Set up the nepali_calendar component (YAML configuration entry)."""
@@ -140,12 +151,14 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 # ── Service registration ───────────────────────────────────────────────────────
 
+
 def _register_services(hass: HomeAssistant, store: EventStore) -> None:
 
     async def svc_greg_to_nep(call: ServiceCall) -> None:
         year, month, day = call.data["year"], call.data["month"], call.data["day"]
         try:
             import datetime
+
             greg = datetime.date(year, month, day)
         except ValueError as err:
             _LOGGER.error("gregorian_to_nepali: invalid date – %s", err)
@@ -155,24 +168,28 @@ def _register_services(hass: HomeAssistant, store: EventStore) -> None:
             f"{DOMAIN}_conversion_result",
             {
                 "direction": "gregorian_to_nepali",
-                "input":     {"year": year, "month": month, "day": day},
+                "input": {"year": year, "month": month, "day": day},
                 "output": {
-                    "bs_year":    nep.year,
-                    "bs_month":   nep.month,
-                    "bs_day":     nep.day,
-                    "month_name": nep.month_name,
+                    "bs_year": nep.year,
+                    "bs_month": nep.month,
+                    "bs_day": nep.day,
+                    "month_name": nep.month_name_eng,
+                    "month_name_np": nep.month_name_np,
                 },
             },
         )
         _LOGGER.info(
             "gregorian_to_nepali: %04d-%02d-%02d → %s",
-            year, month, day, nep,
+            year,
+            month,
+            day,
+            nep,
         )
 
     async def svc_nep_to_greg(call: ServiceCall) -> None:
-        bs_year  = call.data["bs_year"]
+        bs_year = call.data["bs_year"]
         bs_month = call.data["bs_month"]
-        bs_day   = call.data["bs_day"]
+        bs_day = call.data["bs_day"]
         err = validate_bs_date(bs_year, bs_month, bs_day)
         if err:
             _LOGGER.error("nepali_to_gregorian: %s", err)
@@ -182,13 +199,16 @@ def _register_services(hass: HomeAssistant, store: EventStore) -> None:
             f"{DOMAIN}_conversion_result",
             {
                 "direction": "nepali_to_gregorian",
-                "input":     {"bs_year": bs_year, "bs_month": bs_month, "bs_day": bs_day},
-                "output":    {"year": greg.year, "month": greg.month, "day": greg.day},
+                "input": {"bs_year": bs_year, "bs_month": bs_month, "bs_day": bs_day},
+                "output": {"year": greg.year, "month": greg.month, "day": greg.day},
             },
         )
         _LOGGER.info(
             "nepali_to_gregorian: %04d-%02d-%02d → %s",
-            bs_year, bs_month, bs_day, greg.isoformat(),
+            bs_year,
+            bs_month,
+            bs_day,
+            greg.isoformat(),
         )
 
     async def svc_add_event(call: ServiceCall) -> None:
@@ -199,13 +219,13 @@ def _register_services(hass: HomeAssistant, store: EventStore) -> None:
             _LOGGER.error("add_event: %s", err)
             return
         event = await store.async_add_event(
-            title       = call.data["title"],
-            bs_year     = call.data["bs_year"],
-            bs_month    = call.data["bs_month"],
-            bs_day      = call.data["bs_day"],
-            description = call.data.get("description", ""),
-            annual      = call.data.get("annual", False),
-            color       = call.data.get("color", ""),
+            title=call.data["title"],
+            bs_year=call.data["bs_year"],
+            bs_month=call.data["bs_month"],
+            bs_day=call.data["bs_day"],
+            description=call.data.get("description", ""),
+            annual=call.data.get("annual", False),
+            color=call.data.get("color", ""),
         )
         hass.bus.async_fire(f"{DOMAIN}_event_added", event)
         _LOGGER.info("Event added: %s", event["title"])
@@ -221,22 +241,35 @@ def _register_services(hass: HomeAssistant, store: EventStore) -> None:
             _LOGGER.warning("delete_event: ID not found – %s", call.data["event_id"])
 
     async def svc_list_events(call: ServiceCall) -> None:
-        bs_year  = call.data.get("bs_year")
+        bs_year = call.data.get("bs_year")
         bs_month = call.data.get("bs_month")
         if bs_year and bs_month:
             events = store.get_for_bs_month(bs_year, bs_month)
         else:
             events = store.get_all()
-        hass.bus.async_fire(f"{DOMAIN}_events_list", {"events": events, "count": len(events)})
+        hass.bus.async_fire(
+            f"{DOMAIN}_events_list", {"events": events, "count": len(events)}
+        )
 
-    hass.services.async_register(DOMAIN, SERVICE_GREGORIAN_TO_NEPALI, svc_greg_to_nep, _GREG_TO_NEP_SCHEMA)
-    hass.services.async_register(DOMAIN, SERVICE_NEPALI_TO_GREGORIAN, svc_nep_to_greg, _NEP_TO_GREG_SCHEMA)
-    hass.services.async_register(DOMAIN, SERVICE_ADD_EVENT,    svc_add_event,    _ADD_EVENT_SCHEMA)
-    hass.services.async_register(DOMAIN, SERVICE_DELETE_EVENT, svc_delete_event, _DELETE_EVENT_SCHEMA)
-    hass.services.async_register(DOMAIN, SERVICE_LIST_EVENTS,  svc_list_events,  _LIST_EVENTS_SCHEMA)
+    hass.services.async_register(
+        DOMAIN, SERVICE_GREGORIAN_TO_NEPALI, svc_greg_to_nep, _GREG_TO_NEP_SCHEMA
+    )
+    hass.services.async_register(
+        DOMAIN, SERVICE_NEPALI_TO_GREGORIAN, svc_nep_to_greg, _NEP_TO_GREG_SCHEMA
+    )
+    hass.services.async_register(
+        DOMAIN, SERVICE_ADD_EVENT, svc_add_event, _ADD_EVENT_SCHEMA
+    )
+    hass.services.async_register(
+        DOMAIN, SERVICE_DELETE_EVENT, svc_delete_event, _DELETE_EVENT_SCHEMA
+    )
+    hass.services.async_register(
+        DOMAIN, SERVICE_LIST_EVENTS, svc_list_events, _LIST_EVENTS_SCHEMA
+    )
 
 
 # ── Lovelace resource auto-registration ───────────────────────────────────────
+
 
 async def _async_register_lovelace_resource(hass: HomeAssistant) -> None:
     """Attempt to register the Lovelace card JS as a frontend resource."""
