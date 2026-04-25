@@ -11,11 +11,13 @@ Registers:
 from __future__ import annotations
 
 import logging
+from typing import Any
 
 import voluptuous as vol
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant, ServiceCall
+from homeassistant.core import HomeAssistant, ServiceCall, SupportsResponse
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.typing import ConfigType
 
@@ -136,29 +138,31 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 def _register_services(hass: HomeAssistant, store: EventStore) -> None:
 
-    async def svc_greg_to_nep(call: ServiceCall) -> None:
+    async def svc_greg_to_nep(call: ServiceCall) -> dict[str, Any]:
         year, month, day = call.data["year"], call.data["month"], call.data["day"]
         try:
             import datetime
 
             greg = datetime.date(year, month, day)
         except ValueError as err:
-            _LOGGER.error("gregorian_to_nepali: invalid date – %s", err)
-            return
+            raise HomeAssistantError(
+                f"gregorian_to_nepali: invalid date – {err}"
+            ) from err
         nep = nepali_from_gregorian(greg)
+        response = {
+            "direction": "gregorian_to_nepali",
+            "input": {"year": year, "month": month, "day": day},
+            "output": {
+                "bs_year": nep.year,
+                "bs_month": nep.month,
+                "bs_day": nep.day,
+                "month_name": nep.month_name_eng,
+                "month_name_np": nep.month_name_np,
+            },
+        }
         hass.bus.async_fire(
             f"{DOMAIN}_conversion_result",
-            {
-                "direction": "gregorian_to_nepali",
-                "input": {"year": year, "month": month, "day": day},
-                "output": {
-                    "bs_year": nep.year,
-                    "bs_month": nep.month,
-                    "bs_day": nep.day,
-                    "month_name": nep.month_name_eng,
-                    "month_name_np": nep.month_name_np,
-                },
-            },
+            response,
         )
         _LOGGER.info(
             "gregorian_to_nepali: %04d-%02d-%02d → %s",
@@ -167,23 +171,24 @@ def _register_services(hass: HomeAssistant, store: EventStore) -> None:
             day,
             nep,
         )
+        return response
 
-    async def svc_nep_to_greg(call: ServiceCall) -> None:
+    async def svc_nep_to_greg(call: ServiceCall) -> dict[str, Any]:
         bs_year = call.data["bs_year"]
         bs_month = call.data["bs_month"]
         bs_day = call.data["bs_day"]
         err = validate_bs_date(bs_year, bs_month, bs_day)
         if err:
-            _LOGGER.error("nepali_to_gregorian: %s", err)
-            return
+            raise HomeAssistantError(f"nepali_to_gregorian: {err}")
         greg = gregorian_from_nepali(bs_year, bs_month, bs_day)
+        response = {
+            "direction": "nepali_to_gregorian",
+            "input": {"bs_year": bs_year, "bs_month": bs_month, "bs_day": bs_day},
+            "output": {"year": greg.year, "month": greg.month, "day": greg.day},
+        }
         hass.bus.async_fire(
             f"{DOMAIN}_conversion_result",
-            {
-                "direction": "nepali_to_gregorian",
-                "input": {"bs_year": bs_year, "bs_month": bs_month, "bs_day": bs_day},
-                "output": {"year": greg.year, "month": greg.month, "day": greg.day},
-            },
+            response,
         )
         _LOGGER.info(
             "nepali_to_gregorian: %04d-%02d-%02d → %s",
@@ -192,6 +197,7 @@ def _register_services(hass: HomeAssistant, store: EventStore) -> None:
             bs_day,
             greg.isoformat(),
         )
+        return response
 
     async def svc_add_event(call: ServiceCall) -> None:
         err = validate_bs_date(
@@ -222,22 +228,34 @@ def _register_services(hass: HomeAssistant, store: EventStore) -> None:
         else:
             _LOGGER.warning("delete_event: ID not found – %s", call.data["event_id"])
 
-    async def svc_list_events(call: ServiceCall) -> None:
+    async def svc_list_events(call: ServiceCall) -> dict[str, Any]:
         bs_year = call.data.get("bs_year")
         bs_month = call.data.get("bs_month")
         if bs_year and bs_month:
             events = store.get_for_bs_month(bs_year, bs_month)
         else:
             events = store.get_all()
-        hass.bus.async_fire(
-            f"{DOMAIN}_events_list", {"events": events, "count": len(events)}
-        )
+        response = {
+            "events": events,
+            "count": len(events),
+            "filters": {"bs_year": bs_year, "bs_month": bs_month},
+        }
+        hass.bus.async_fire(f"{DOMAIN}_events_list", response)
+        return response
 
     hass.services.async_register(
-        DOMAIN, SERVICE_GREGORIAN_TO_NEPALI, svc_greg_to_nep, _GREG_TO_NEP_SCHEMA
+        DOMAIN,
+        SERVICE_GREGORIAN_TO_NEPALI,
+        svc_greg_to_nep,
+        _GREG_TO_NEP_SCHEMA,
+        supports_response=SupportsResponse.OPTIONAL,
     )
     hass.services.async_register(
-        DOMAIN, SERVICE_NEPALI_TO_GREGORIAN, svc_nep_to_greg, _NEP_TO_GREG_SCHEMA
+        DOMAIN,
+        SERVICE_NEPALI_TO_GREGORIAN,
+        svc_nep_to_greg,
+        _NEP_TO_GREG_SCHEMA,
+        supports_response=SupportsResponse.OPTIONAL,
     )
     hass.services.async_register(
         DOMAIN, SERVICE_ADD_EVENT, svc_add_event, _ADD_EVENT_SCHEMA
@@ -246,7 +264,11 @@ def _register_services(hass: HomeAssistant, store: EventStore) -> None:
         DOMAIN, SERVICE_DELETE_EVENT, svc_delete_event, _DELETE_EVENT_SCHEMA
     )
     hass.services.async_register(
-        DOMAIN, SERVICE_LIST_EVENTS, svc_list_events, _LIST_EVENTS_SCHEMA
+        DOMAIN,
+        SERVICE_LIST_EVENTS,
+        svc_list_events,
+        _LIST_EVENTS_SCHEMA,
+        supports_response=SupportsResponse.OPTIONAL,
     )
 
 

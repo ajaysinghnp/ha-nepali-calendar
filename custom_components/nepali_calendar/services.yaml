@@ -1,8 +1,9 @@
-gregorian_to_nepali:
+ad2bs:
   name: Gregorian to Nepali
   description: >
     Convert a Gregorian (AD) date to its Bikram Sambat (BS) equivalent.
-    The result is fired as a  nepali_calendar_conversion_result  event on the event bus.
+    The result is returned as service response data and also fired as a
+    nepali_calendar_conversion_result event on the event bus.
   fields:
     year:
       name: Year
@@ -35,11 +36,12 @@ gregorian_to_nepali:
           max: 31
           mode: box
 
-nepali_to_gregorian:
+bs2ad:
   name: Nepali to Gregorian
   description: >
     Convert a Bikram Sambat (BS) date to its Gregorian (AD) equivalent.
-    The result is fired as a  nepali_calendar_conversion_result  event.
+    The result is returned as service response data and also fired as a
+    nepali_calendar_conversion_result event.
   fields:
     bs_year:
       name: BS Year
@@ -151,7 +153,8 @@ delete_event:
 list_events:
   name: List Nepali Events
   description: >
-    Fire a  nepali_calendar_events_list  event containing all stored events.
+    Return all stored events as service response data.
+    Also fire a nepali_calendar_events_list event containing all stored events.
     Optionally filter by BS year and/or month.
   fields:
     bs_year:
