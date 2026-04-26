@@ -759,7 +759,7 @@ window.customCards.push({
 });
 
 console.info(
-  "%c NEPALI-CALENDAR-CARD %c v0.2.0 ",
+  "%c NEPALI-CALENDAR-CARD %c v0.2.2 ",
   "background:#c0392b;color:#fff;font-weight:700;padding:2px 6px;border-radius:3px 0 0 3px;",
   "background:#222;color:#fff;padding:2px 6px;border-radius:0 3px 3px 0;"
 );

@@ -11,7 +11,8 @@ from homeassistant.core import HomeAssistant
 from .const import DOMAIN
 
 
-class NepaliCalendarConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
+@config_entries.HANDLERS.register(DOMAIN)
+class NepaliCalendarConfigFlow(config_entries.ConfigFlow):
     """Handle a config flow for Nepali Calendar."""
 
     VERSION = 1
