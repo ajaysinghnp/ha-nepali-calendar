@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import datetime as dt
-from tkinter import NE
 
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.config_entries import ConfigEntry
