@@ -6,13 +6,11 @@ from typing import Any
 
 import voluptuous as vol
 from homeassistant import config_entries
-from homeassistant.core import HomeAssistant
 
 from .const import DOMAIN
 
 
-@config_entries.HANDLERS.register(DOMAIN)
-class NepaliCalendarConfigFlow(config_entries.ConfigFlow):
+class NepaliCalendarConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a config flow for Nepali Calendar."""
 
     VERSION = 1
@@ -38,3 +36,8 @@ class NepaliCalendarConfigFlow(config_entries.ConfigFlow):
                 )
             },
         )
+
+
+# Compatibility shim for older Home Assistant versions using HANDLERS registry.
+if hasattr(config_entries, "HANDLERS"):
+    config_entries.HANDLERS.register(DOMAIN)(NepaliCalendarConfigFlow)
