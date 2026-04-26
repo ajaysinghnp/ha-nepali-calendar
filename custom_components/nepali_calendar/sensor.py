@@ -235,7 +235,7 @@ class NepaliGregorianDateSensor(_BaseNepaliSensor):
         return {
             ATTR_GREGORIAN_DATE_ENG: greg.isoformat(),
             ATTR_GREGORIAN_WEEKDAY: greg.strftime("%A"),
-            ATTR_GREGORIAN_WEEKDAY_NP: NEPALI_DAYS_NP[greg.weekday() + 1],  # noqa: F821
+            ATTR_GREGORIAN_WEEKDAY_NP: NEPALI_DAYS_NP[(greg.weekday() + 1) % 7],  # noqa: F821
             ATTR_GREGORIAN_MONTH: greg.strftime("%B"),
             ATTR_GREGORIAN_MONTH_NP: ENGLISH_MONTHS_NP[greg.month - 1],
         }
